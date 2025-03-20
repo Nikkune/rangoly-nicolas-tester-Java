@@ -99,9 +99,15 @@ public class ParkingDataBaseIT {
     @Test
     public void testParkingLotExitRecurringUser() {
         //Arrange
-        testParkingLotExit();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         ParkingSpot spot = parkingService.getNextParkingNumberIfAvailable();
+        Ticket first_ticket = new Ticket();
+        first_ticket.setParkingSpot(spot);
+        first_ticket.setVehicleRegNumber("ABCDEF");
+        first_ticket.setPrice(Fare.CAR_RATE_PER_HOUR);
+        first_ticket.setInTime(new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000))); // Simulate that the car has been there for 1 day
+        first_ticket.setOutTime(new Date(System.currentTimeMillis() - (24 *60 * 60 * 1000) + (60 * 60 * 1000))); // Simulate that the car has been there for 1 hour
+        ticketDAO.saveTicket(first_ticket);
         Ticket ticket = new Ticket();
         ticket.setParkingSpot(spot);
         ticket.setVehicleRegNumber("ABCDEF");
